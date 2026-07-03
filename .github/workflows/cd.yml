@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 jobs:
-  Deploy:
+  deploy:
     name: Deploy
     runs-on: ubuntu-latest
 
@@ -23,3 +23,13 @@ jobs:
 
       - name: Build app
         run: npm run build
+
+      - name: Authenticate GCP
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Build & Push Docker image
+        run: |
+          gcloud builds submit \
+          --tag us-central1-docker.pkg.dev/notely-501316/notely-ar-repo/notely:latest .
