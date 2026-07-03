@@ -32,11 +32,7 @@ export async function handlerUsersCreate(req: Request, res: Response) {
   }
 }
 
-export async function handlerUsersGet(
-  req: Request,
-  res: Response,
-  user: User
-) {
+export async function handlerUsersGet(req: Request, res: Response, user: User) {
   respondWithJSON(res, 200, user);
 }
 
