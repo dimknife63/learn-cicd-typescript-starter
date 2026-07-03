@@ -4,11 +4,11 @@ import { v4 as uuidv4 } from "uuid";
 import { respondWithError, respondWithJSON } from "./json.js";
 import { createUser, getUser } from "../db/queries/users.js";
 import { User } from "../db/schema.js";
-import crypto from "crypto";
 
 export async function handlerUsersCreate(req: Request, res: Response) {
   try {
     const { name } = req.body;
+
     const apiKey = generateRandomSHA256Hash();
     const userId = uuidv4();
 
@@ -19,7 +19,9 @@ export async function handlerUsersCreate(req: Request, res: Response) {
       name,
       apiKey,
     });
+
     const user = await getUser(apiKey);
+
     if (user) {
       respondWithJSON(res, 201, user);
     } else {
@@ -30,12 +32,15 @@ export async function handlerUsersCreate(req: Request, res: Response) {
   }
 }
 
-export async function handlerUsersGet(req: Request, res: Response, user: User) {
+export async function handlerUsersGet(
+  req: Request,
+  res: Response,
+  user: User
+) {
   respondWithJSON(res, 200, user);
 }
 
 function generateRandomSHA256Hash(): string {
-  // should we be using crypto.randomBytes instead of crypto.pseudoRandomBytes?
   return crypto
     .createHash("sha256")
     .update(crypto.randomBytes(32))
